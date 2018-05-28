@@ -9,10 +9,10 @@
  *
  * This file is released under the GPL license.
  *     Copyright (c) 1997-2007 Jean Tourrilhes <jt@hpl.hp.com>
+  *     Modified by Marco Mendonca 2018
  */
 
 #include "iwlib.h"		/* Header */
-#include "time.h"
 #include <sys/time.h>
 
 /****************************** TYPES ******************************/
