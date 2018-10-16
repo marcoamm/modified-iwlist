@@ -9,10 +9,10 @@
  *
  * This file is released under the GPL license.
  *     Copyright (c) 1997-2007 Jean Tourrilhes <jt@hpl.hp.com>
-  *     Modified by Marco Mendonca 2018
  */
 
 #include "iwlib.h"		/* Header */
+#include "time.h"
 #include <sys/time.h>
 
 /****************************** TYPES ******************************/
@@ -1750,15 +1750,20 @@ main(int	argc,
 
   for(loop=1; loop<30; loop++)
   {
+    //Print start time
     time_t t = time(NULL); /* Time stamping every loop iteraction*/
     struct tm tm = *localtime(&t);
-    //Print time
     printf("#%d %d %d %d %d %d\n", tm.tm_mday, tm.tm_mon+1, tm.tm_year + 1900,
            tm.tm_hour, tm.tm_min, tm.tm_sec);
     if (dev)
       (*iwcmd->fn)(skfd, dev, args, count);
     else
       iw_enum_devices(skfd, iwcmd->fn, args, count);
+    //Print end time
+    time_t t = time(NULL); /* Time stamping every loop iteraction*/
+    struct tm tm = *localtime(&t);
+    printf("##%d %d %d %d %d %d\n", tm.tm_mday, tm.tm_mon+1, tm.tm_year + 1900,
+           tm.tm_hour, tm.tm_min, tm.tm_sec);
     sleep(1.5);
   }
   /* Close the socket. */
