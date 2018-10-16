@@ -1753,7 +1753,7 @@ main(int	argc,
     //Print start time
     time_t t = time(NULL); /* Time stamping every loop iteraction*/
     struct tm tm = *localtime(&t);
-    printf("#%d %d %d %d %d %d\n", tm.tm_mday, tm.tm_mon+1, tm.tm_year + 1900,
+    printf("#s%d %d %d %d %d %d\n", tm.tm_mday, tm.tm_mon+1, tm.tm_year + 1900,
            tm.tm_hour, tm.tm_min, tm.tm_sec);
     if (dev)
       (*iwcmd->fn)(skfd, dev, args, count);
@@ -1762,7 +1762,7 @@ main(int	argc,
     //Print end time
     time_t t = time(NULL); /* Time stamping every loop iteraction*/
     struct tm tm = *localtime(&t);
-    printf("##%d %d %d %d %d %d\n", tm.tm_mday, tm.tm_mon+1, tm.tm_year + 1900,
+    printf("#e%d %d %d %d %d %d\n", tm.tm_mday, tm.tm_mon+1, tm.tm_year + 1900,
            tm.tm_hour, tm.tm_min, tm.tm_sec);
     sleep(1.5);
   }
