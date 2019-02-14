@@ -13,6 +13,8 @@
 
 #include "iwlib.h"		/* Header */
 #include "time.h"
+#include "stdint.h"
+#include <inttypes.h>
 #include <sys/time.h>
 
 /****************************** TYPES ******************************/
@@ -46,6 +48,9 @@ typedef struct iw_auth_descr
   const struct iwmask_name *	names;		/* Names for this value */
   const int			num_names;	/* Number of names */
 } iw_auth_descr;
+
+
+struct timespec start, end;   /*Coming from sys/time.h*/
 
 /**************************** CONSTANTS ****************************/
 
@@ -1750,21 +1755,26 @@ main(int	argc,
 
   for(loop=1; loop<30; loop++)
   {
+    
+
     //Print start time
-    time_t t = time(NULL); /* Time stamping every loop iteraction*/
-    struct tm tm = *localtime(&t);
-    printf("#s%d %d %d %d %d %d\n", tm.tm_mday, tm.tm_mon+1, tm.tm_year + 1900,
-           tm.tm_hour, tm.tm_min, tm.tm_sec);
+    clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+    // printf("#s %d %d %d %d %d %d\n", tm.tm_mday, tm.tm_mon+1, tm.tm_year + 1900,
+    //       tm.tm_hour, tm.tm_min, tm.tm_sec);
+    
+    //Perform the scan
     if (dev)
       (*iwcmd->fn)(skfd, dev, args, count);
     else
       iw_enum_devices(skfd, iwcmd->fn, args, count);
-    //Print end time
-    time_t t = time(NULL); /* Time stamping every loop iteraction*/
-    struct tm tm = *localtime(&t);
-    printf("#e%d %d %d %d %d %d\n", tm.tm_mday, tm.tm_mon+1, tm.tm_year + 1900,
-           tm.tm_hour, tm.tm_min, tm.tm_sec);
+    
     sleep(1.5);
+    //Print end time
+    clock_gettime(CLOCK_MONOTONIC_RAW, &end);
+    //printf("#e %d %d %d %d %d %d\n", tm.tm_mday, tm.tm_mon+1, tm.tm_year + 1900,
+    //      tm.tm_hour, tm.tm_min, tm.tm_sec);
+    uint64_t delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000; /*Time in milliseconds*/
+    printf("%" PRIu64 "\n", delta_us);
   }
   /* Close the socket. */
   iw_sockets_close(skfd);
