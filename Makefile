@@ -99,7 +99,7 @@ endif
 
 # Other flags
 CFLAGS=-Os -W -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow \
-	-Wpointer-arith -Wcast-qual -Winline -I.
+	-Wpointer-arith -Wcast-qual -I.
 #CFLAGS=-O2 -W -Wall -Wstrict-prototypes -I.
 DEPFLAGS=-MMD
 XCFLAGS=$(CFLAGS) $(DEPFLAGS) $(WARN) $(HEADERS) $(WELIB_FLAG) $(WEDEF_FLAG)
