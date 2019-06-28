@@ -138,14 +138,14 @@ print_scanning_token(struct stream_descr *	stream,	/* Stream of events */
       iw_print_gen_ie(event->u.data.pointer, event->u.data.length);
       break;
 #endif	/* WE_ESSENTIAL */
-    case IWEVCUSTOM:
-      {
-	char custom[IW_CUSTOM_MAX+1];
-	if((event->u.data.pointer) && (event->u.data.length))
-	  memcpy(custom, event->u.data.pointer, event->u.data.length);
-	custom[event->u.data.length] = '\0';
-	printf("                    Extra:%s\n", custom);
-      }
+    //case IWEVCUSTOM:
+    //  {
+	//char custom[IW_CUSTOM_MAX+1];
+	//if((event->u.data.pointer) && (event->u.data.length))
+	//  memcpy(custom, event->u.data.pointer, event->u.data.length);
+	//custom[event->u.data.length] = '\0';
+	//printf("                    Extra:%s\n", custom);
+    //  }
       break;
     default:
   //    printf("                    (Unknown Wireless Token 0x%04X)\n",
@@ -1752,15 +1752,14 @@ main(int	argc,
     }
 
   /* do the actual work */
-
-  for(loop=1; loop<30; loop++)
-  {
+  int scann={0};
+  do {
     
 
     //Print start time
-    clock_gettime(CLOCK_MONOTONIC_RAW, &start);
-    // printf("#s %d %d %d %d %d %d\n", tm.tm_mday, tm.tm_mon+1, tm.tm_year + 1900,
-    //       tm.tm_hour, tm.tm_min, tm.tm_sec);
+    clock_gettime(CLOCK_REALTIME, &start);
+    uint64_t delta_us = (start.tv_sec) * 1000000 + (start.tv_nsec) / 1000; //Time in microseconds
+    printf("Start %" PRIu64 " - scan %d\n\n", delta_us, scann++);
     
     //Perform the scan
     if (dev)
@@ -1768,14 +1767,15 @@ main(int	argc,
     else
       iw_enum_devices(skfd, iwcmd->fn, args, count);
     
-    sleep(1.5);
+    //sleep(1.5);
+
     //Print end time
-    clock_gettime(CLOCK_MONOTONIC_RAW, &end);
-    //printf("#e %d %d %d %d %d %d\n", tm.tm_mday, tm.tm_mon+1, tm.tm_year + 1900,
-    //      tm.tm_hour, tm.tm_min, tm.tm_sec);
-    uint64_t delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000; /*Time in milliseconds*/
-    printf("%" PRIu64 "\n", delta_us);
-  }
+    clock_gettime(CLOCK_REALTIME, &end);
+    delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000; /*Time in milliseconds*/
+    printf("Duration %" PRIu64 "\n\n", delta_us); //Time in microseconds
+
+  } while (1);
+
   /* Close the socket. */
   iw_sockets_close(skfd);
 
